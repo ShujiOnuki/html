@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1">
+    <title>金額計算</title>
+    <link rel="stylesheet" type="text/css" href="./css/profile.css">
+</head>
+
+<body>
+    <h2>現金計算表</h2>
+    <div id="parent">
+        <div id="elementleft">
+            <table>
+                <tr>
+                    <th><label for="1m">10000円</label></th>
+                    <td><input class="innum" type="number" id="1m" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="1mt"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="5s">5000円</label></th>
+                    <td><input class="innum" type="number" id="5s" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="5st"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="2s">2000円</label></th>
+                    <td><input class="innum" type="number" id="2s" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="2st"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="1s">1000円</label></th>
+                    <td><input class="innum" type="number" id="1s" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="1st"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="5h">500円</label></th>
+                    <td><input class="innum" type="number" id="5h" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="5ht"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="1h">100円</label></th>
+                    <td><input class="innum" type="number" id="1h" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="1ht"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="5j">50円</label></th>
+                    <td><input class="innum" type="number" id="5j" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="5jt"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="1j">10円</label></th>
+                    <td><input class="innum" type="number" id="1j" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="1jt"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="5e">5円</label></th>
+                    <td><input class="innum" type="number" id="5e" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="5et"></span></th>
+                </tr>
+                <tr>
+                    <th><label for="1e">1円</label></th>
+                    <td><input class="innum" type="number" id="1e" value="0" min="0" oninput="Calc()"></td>
+                    <th class='l'>￥<span id="1et"></span></th>
+                </tr>
+            </table>
+        </div>
+        <div id="elementleft">
+            <p>テキストボックスに数値を入れると、金額が計算されます。
+                <br>点検精算を押すと、cvsファイルがダウンロードできます。
+                <br>GETパラメータを使用することによって入力を自動化することができます。
+                <table>
+                    <tr><th>1m</th><td>一万の値です</td></tr>
+                    <tr><th>5s</th><td>五千の値です</td></tr>
+                    <tr><th>2s</th><td>二千の値です</td></tr>
+                    <tr><th>1s</th><td>千の値です</td></tr>
+                    <tr><th>5h</th><td>五百の値です</td></tr>
+                    <tr><th>1h</th><td>百の値です</td></tr>
+                    <tr><th>5j</th><td>五十の値です</td></tr>
+                    <tr><th>1j</th><td>十の値です</td></tr>
+                    <tr><th>5e</th><td>五の値です</td></tr>
+                    <tr><th>1e</th><td>一の値です</td></tr>
+                    <tr><th>s</th><td>1を入れると自動で精算します</td></tr>
+                </table>
+            </p>
+        </div>
+    </div>
+    <div id="elementdown">
+        <input type="button" value="点検・精算" onclick="Enter()">
+        <p id="msg"></p>
+        <p><a href="./index.html" alt="to Top">Topへ</a></p>
+    </div>
+    <script type="text/javascript">
+        const mul = [10000, 5000, 2000, 1000, 500, 100, 50, 10, 5, 1];
+        const tai = ['1m', '5s', '2s', '1s', '5h', '1h', '5j', '1j', '5e', '1e'];
+        const DaFn = new Date();
+        const params = (new URL(document.location)).searchParams;
+        let sum = 0;
+        for (let i = 0; i < tai.length; i++) {
+            document.getElementById(tai[i]).value = (params.get(tai[i]) ? params.get(tai[i]) : 0);
+        }
+        Calc();
+        if (params.get('s') == 1) {
+            Enter();
+        }
+        function Calc() {
+            sum = 0;
+            for (let i = 0; i < tai.length; i++) {
+                sum += (document.getElementById(tai[i] + "t").innerText = (document.getElementById(tai[i]).value) * mul[i]);
+            }
+            document.getElementById("msg").innerText = "合計金額：" + sum + "円";
+        }
+        function Enter() {
+            if (sum == 0) {
+                if (window.confirm('合計金額が0円です')) { } else { return; }
+            }
+            if (window.confirm('合計金額' + sum + '円で保存しますか？')) { } else { return; }
+            var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            var content = '';
+            for (let i = 0; i < tai.length; i++) {
+                content += mul[i] + '円,' + document.getElementById(tai[i]).value + '\r\n';
+            }
+            content += '合計,' + sum + '\r\n' + DaFn.getFullYear() + '年,' + (DaFn.getMonth() + 1) + '/' + DaFn.getDate() + ','
+                + DaFn.getHours() + ':' + DaFn.getMinutes() + ':' + DaFn.getSeconds();
+            var blob = new Blob([bom, content], { "type": "text/csv" });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = DaFn.getFullYear() + '.' + (DaFn.getMonth() + 1) + '.' + DaFn.getDate() + ' '
+                + DaFn.getHours() + 'h' + DaFn.getMinutes() + 'm' + DaFn.getSeconds() + 's_log.csv';
+            document.body.appendChild(a);
+            a.click(); window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+
+</html>
