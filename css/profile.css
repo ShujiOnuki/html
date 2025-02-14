@@ -23,3 +23,23 @@ body{
 ol.academic{
     list-style-type: katakana-iroha;
 }
+.l {
+    text-align: left;
+}
+.innum {
+    width: 50px;
+}
+th{
+    background-color: #a7c9ff;
+}
+#elementleft{
+    float: left;
+}
+#parent{
+    display: grid;
+    
+    grid-template-columns: 1fr 1fr;
+}
+#elementdown{
+    clear: both;
+}
